@@ -1,0 +1,26 @@
+---
+# Optional, defaults here
+mautrix_telegram_docker_image: dock.mau.dev/tulir/mautrix-telegram:v0.9.0
+# Use for example to hook up with Traefik
+mautrix_telegram_docker_labels: []
+# Docker network to attach to
+mautrix_telegram_docker_network: default
+# Routing
+mautrix_telegram_appservice_path: "/mautrix-telegram"
+mautrix_telegram_appservice_public_path: "{{ mautrix_telegram_appservice_path }}/public"
+mautrix_telegram_telegram_bot_token: disabled
+
+# Required, no defaults
+#mautrix_telegram_homeserver_name: domain.tld
+#mautrix_telegram_homeserver_domain: matrix.domain.tld
+#mautrix_telegram_appservice_base_url: https://mautrix-telegram.domain.tld
+#mautrix_telegram_appservice_database: sqlite:///filename.db or postgres://username:password@hostname/dbname
+#mautrix_telegram_appservice_as_token: changemetosomethingsecret
+#mautrix_telegram_appservice_hs_token: changemetosomethingsecret
+#mautrix_telegram_bridge_permissions:
+#  "*": "relaybot"
+#  "public.example.com": "user"
+#  "example.com": "full"
+#  "@admin:example.com": "admin"
+#mautrix_telegram_telegram_api_id: getfromtelegram
+#mautrix_telegram_telegram_api_hash: getfromtelegram

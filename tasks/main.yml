@@ -1,0 +1,33 @@
+---
+- name: Ensure path
+  file:
+    path: "/data/mautrix-telegram"
+    state: directory
+
+- name: Template config
+  template:
+    src: config.yaml
+    dest: "/data/mautrix-telegram/config.yaml"
+  register: _config
+
+- name: Template registration
+  template:
+    src: registration.yaml
+    dest: "/data/mautrix-telegram/registration.yaml"
+  register: _registration
+
+- name: Mautrix Telegram container
+  docker_container:
+    state: started
+    name: "mautrix-telegram"
+    image: "{{ mautrix_telegram_docker_image }}"
+    restart_policy: unless-stopped
+    restart: "{{ _config.changed or _registration.changed }}"
+    volumes:
+      - "/data/mautrix-telegram:/data"
+    log_driver: json-file
+    log_options:
+      max-size: "100m"
+    labels: "{{ mautrix_telegram_docker_labels }}"
+    networks:
+      - name: "{{ mautrix_telegram_docker_network }}"
