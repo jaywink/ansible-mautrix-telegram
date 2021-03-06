@@ -2,7 +2,7 @@ galaxy_info:
   author: Jason Robinson
   description: Matrix Mautrix Telegram
 
-  # issue_tracker_url: http://example.com/issue/tracker
+  issue_tracker_url: https://git.feneas.org/jaywink/ansible-mautrix-telegram/-/issues
 
   license: Apache-2.0
 
