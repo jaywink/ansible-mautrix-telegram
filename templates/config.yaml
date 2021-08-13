@@ -8,6 +8,12 @@ homeserver:
     # Only applies if address starts with https://
     verify_ssl: true
     asmux: false
+    # Number of retries for all HTTP requests if the homeserver isn't reachable.
+    http_retry_count: 4
+    # The URL to push real-time bridge status to.
+    # If set, the bridge will make POST requests to this URL whenever a user's Telegram connection state changes.
+    # The bridge will use the appservice as_token to authorize requests.
+    status_endpoint: null
 
 # Application service host/registration related details
 # Changing these values requires regeneration of the registration.
@@ -273,6 +279,15 @@ bridge:
     # This field will automatically be changed back to false after it,
     # except if the config file is not writable.
     resend_bridge_info: false
+    # When using double puppeting, should muted chats be muted in Matrix?
+    mute_bridging: false
+    # When using double puppeting, should pinned chats be moved to a specific tag in Matrix?
+    # The favorites tag is `m.favourite`.
+    pinned_tag: null
+    # Same as above for archived chats, the low priority tag is `m.lowpriority`.
+    archive_tag: null
+    # Whether or not mute status and tags should only be bridged when the portal room is created.
+    tag_only_on_create: true
     # Settings for backfilling messages from Telegram.
     backfill:
         # Whether or not the Telegram ghosts of logged in Matrix users should be
