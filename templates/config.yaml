@@ -14,6 +14,8 @@ homeserver:
     # If set, the bridge will make POST requests to this URL whenever a user's Telegram connection state changes.
     # The bridge will use the appservice as_token to authorize requests.
     status_endpoint: null
+    # Endpoint for reporting per-message status.
+    message_send_checkpoint_endpoint: null
 
 # Application service host/registration related details
 # Changing these values requires regeneration of the registration.
@@ -31,14 +33,19 @@ appservice:
     # Usually 1 is enough, but on high-traffic bridges you might need to increase this to avoid 413s
     max_body_size: 1
 
-    # The full URI to the database. SQLite and Postgres are fully supported.
+    # The full URI to the database. SQLite and Postgres are supported.
     # Other DBMSes supported by SQLAlchemy may or may not work.
     # Format examples:
     #   SQLite:   sqlite:///filename.db
     #   Postgres: postgres://username:password@hostname/dbname
     database: "{{ mautrix_telegram_appservice_database }}"
-    # Optional extra arguments for SQLAlchemy's create_engine
-    database_opts: {}
+    # Additional arguments for asyncpg.create_pool() or sqlite3.connect()
+    # https://magicstack.github.io/asyncpg/current/api/index.html#asyncpg.pool.create_pool
+    # https://docs.python.org/3/library/sqlite3.html#sqlite3.connect
+    # For sqlite, min_size is used as the connection thread pool size and max_size is ignored.
+    database_opts:
+        min_size: 1
+        max_size: 10
 
     # Public part of web server for out-of-Matrix interaction with the bridge.
     # Used for things like login if the user wants to make sure the 2FA password isn't stored in
@@ -225,35 +232,24 @@ bridge:
         # Format to which animated stickers should be converted.
         # disable - No conversion, send as-is (gzipped lottie)
         # png - converts to non-animated png (fastest),
-        # gif - converts to animated gif, but loses transparency
+        # gif - converts to animated gif
         # webm - converts to webm video, requires ffmpeg executable with vp9 codec and webm container support
         target: gif
         # Arguments for converter. All converters take width and height.
-        # GIF converter takes background as a hex color.
         args:
             width: 256
             height: 256
-            background: "020202"  # only for gif
-            fps: 30               # only for webm
-    # End-to-bridge encryption support options. These require matrix-nio to be installed with pip
-    # and login_shared_secret to be configured in order to get a device for the bridge bot.
+            fps: 25 # only for webm and gif (2, 5, 10, 20 or 25 recommended)
+    # End-to-bridge encryption support options.
     #
-    # Additionally, https://github.com/matrix-org/synapse/pull/5758 is required if using a normal
-    # application service.
+    # See https://docs.mau.fi/bridges/general/end-to-bridge-encryption.html for more info.
     encryption:
         # Allow encryption, work in group chat rooms with e2ee enabled
         allow: false
         # Default to encryption, force-enable encryption in all portals the bridge creates
         # This will cause the bridge bot to be in private chats for the encryption to work properly.
         default: false
-        # Database for the encryption data. Currently only supports Postgres and an in-memory
-        # store that's persisted as a pickle.
-        # If set to `default`, will use the appservice postgres database
-        # or a pickle file if the appservice database is sqlite.
-        #
-        # Format examples:
-        #   Pickle:   pickle:///filename.pickle
-        #   Postgres: postgres://username:password@hostname/dbname
+        # Database for the encryption data. If set to `default`, will use the appservice database.
         database: default
         # Options for automatic key sharing.
         key_sharing:
@@ -288,6 +284,10 @@ bridge:
     archive_tag: null
     # Whether or not mute status and tags should only be bridged when the portal room is created.
     tag_only_on_create: true
+    # Should leaving the room on Matrix make the user leave on Telegram?
+    bridge_matrix_leave: true
+    # Should the user be kicked out of all portals when logging out of the bridge?
+    kick_on_logout: true
     # Settings for backfilling messages from Telegram.
     backfill:
         # Whether or not the Telegram ghosts of logged in Matrix users should be
@@ -333,16 +333,6 @@ bridge:
         #      notices from users listed here will be bridged.
         exceptions: []
 #        - "@importantbot:example.com"
-
-    # Some config options related to Telegram message deduplication.
-    # The default values are usually fine, but some debug messages/warnings might recommend you
-    # change these.
-    deduplication:
-        # Whether or not to check the database if the message about to be sent is a duplicate.
-        pre_db_check: false
-        # The number of latest events to keep when checking for duplicates.
-        # You might need to increase this on high-traffic bridge instances.
-        cache_queue_length: 20
 
     # The formats to use when sending messages to Telegram via the relay bot.
     # Text msgtypes (m.text, m.notice and m.emote) support HTML, media msgtypes don't.
@@ -395,6 +385,21 @@ bridge:
 
     # The prefix for commands. Only required in non-management rooms.
     command_prefix: "!tg"
+
+    # Messages sent upon joining a management room.
+    # Markdown is supported. The defaults are listed below.
+    management_room_text:
+        # Sent when joining a room.
+        welcome: "Hello, I'm a Telegram bridge bot."
+        # Sent when joining a management room and the user is already logged in.
+        welcome_connected: "Use `help` for help."
+        # Sent when joining a management room and the user is not logged in.
+        welcome_unconnected: "Use `help` for help or `login` to log in."
+        # Optional extra text sent when joining a management room.
+        additional_help: ""
+
+    # Send each message separately (for readability in some clients)
+    management_room_multiple_messages: false
 
     # Permissions for using the bridge.
     # Permitted values:
