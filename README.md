@@ -38,7 +38,7 @@ mautrix_telegram_telegram_api_hash: getfromtelegram
 These defaults will be used if no values provided.
 
 ```yaml
-mautrix_telegram_docker_image: dock.mau.dev/tulir/mautrix-telegram:v0.10.0
+mautrix_telegram_docker_image: dock.mau.dev/mautrix/telegram:v0.11.1
 # Use for example to hook up with Traefik
 # Ensure to use `PathPrefixStrip:/mautrix-telegram` in your frontend
 # rule for Traefik, should you keep the default path mount. Mautrix-Telegram
