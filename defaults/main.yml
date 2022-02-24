@@ -1,6 +1,6 @@
 ---
 # Optional, defaults here
-mautrix_telegram_docker_image: dock.mau.dev/mautrix/telegram:v0.11.1
+mautrix_telegram_docker_image: dock.mau.dev/mautrix/telegram:v0.11.2
 # Use for example to hook up with Traefik
 mautrix_telegram_docker_labels: []
 # Docker network to attach to
