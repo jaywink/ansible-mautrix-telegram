@@ -38,7 +38,7 @@ mautrix_telegram_telegram_api_hash: getfromtelegram
 These defaults will be used if no values provided.
 
 ```yaml
-mautrix_telegram_docker_image: dock.mau.dev/mautrix/telegram:v0.11.3
+mautrix_telegram_docker_image: dock.mau.dev/mautrix/telegram:v0.12.0
 # Use for example to hook up with Traefik
 # Ensure to use `PathPrefixStrip:/mautrix-telegram` in your frontend
 # rule for Traefik, should you keep the default path mount. Mautrix-Telegram
@@ -46,9 +46,12 @@ mautrix_telegram_docker_image: dock.mau.dev/mautrix/telegram:v0.11.3
 mautrix_telegram_docker_labels: []
 # Docker network to attach to
 mautrix_telegram_docker_network: default
+# Routing
 mautrix_telegram_appservice_path: "/mautrix-telegram"
 mautrix_telegram_appservice_public_path: "{{ mautrix_telegram_appservice_path }}/public"
 mautrix_telegram_telegram_bot_token: disabled
+# Max size of remote groups/channels to bridge (-1 for any size)
+mautrix_telegram_bridge_max_member_count: "-1"
 ```
 
 ### Appservice
