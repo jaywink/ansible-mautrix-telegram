@@ -52,6 +52,8 @@ mautrix_telegram_appservice_public_path: "{{ mautrix_telegram_appservice_path }}
 mautrix_telegram_telegram_bot_token: disabled
 # Max size of remote groups/channels to bridge (-1 for any size)
 mautrix_telegram_bridge_max_member_count: "-1"
+# Sync at startup
+mautrix_telegram_bridge_startup_sync: true
 ```
 
 ### Appservice

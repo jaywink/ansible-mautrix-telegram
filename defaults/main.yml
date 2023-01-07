@@ -14,6 +14,7 @@ mautrix_telegram_appservice_public_path: "{{ mautrix_telegram_appservice_path }}
 mautrix_telegram_telegram_bot_token: disabled
 # Max size of remote groups/channels to bridge
 mautrix_telegram_bridge_max_member_count: "-1"
+mautrix_telegram_bridge_startup_sync: true
 
 # Required, no defaults
 #mautrix_telegram_homeserver_name: domain.tld

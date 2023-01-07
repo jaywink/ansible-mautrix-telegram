@@ -163,7 +163,7 @@ bridge:
     skip_deleted_members: false
     # Whether or not to automatically synchronize contacts and chats of Matrix users logged into
     # their Telegram account at startup.
-    startup_sync: true
+    startup_sync: {{ mautrix_telegram_bridge_startup_sync | to_json }}
     # Number of most recently active dialogs to check when syncing chats.
     # Set to 0 to remove limit.
     sync_update_limit: 0
