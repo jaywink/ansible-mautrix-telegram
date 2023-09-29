@@ -1,6 +1,6 @@
 ---
 # Optional, defaults here
-mautrix_telegram_docker_image: dock.mau.dev/mautrix/telegram:v0.14.0
+mautrix_telegram_docker_image: dock.mau.dev/mautrix/telegram:v0.14.2
 # Use for example to hook up with Traefik
 # Ensure to use `PathPrefixStrip:/mautrix-telegram` in your frontend
 # rule for Traefik, should you keep the default path mount. Mautrix-Telegram
