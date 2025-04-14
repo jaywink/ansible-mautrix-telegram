@@ -15,6 +15,11 @@ mautrix_telegram_telegram_bot_token: disabled
 # Max size of remote groups/channels to bridge
 mautrix_telegram_bridge_max_member_count: "-1"
 mautrix_telegram_bridge_startup_sync: true
+# Logging
+mautrix_telegram_logging_root_level: INFO
+mautrix_telegram_logging_mau_level: INFO
+mautrix_telegram_logging_telethon_level: INFO
+mautrix_telegram_logging_aiohttp_level: INFO
 
 # Required, no defaults
 #mautrix_telegram_homeserver_name: domain.tld

@@ -657,11 +657,11 @@ logging:
             formatter: colored
     loggers:
         mau:
-            level: DEBUG
+            level: {{ mautrix_telegram_logging_mau_level }}
         telethon:
-            level: INFO
+            level: {{ mautrix_telegram_logging_telethon_level }}
         aiohttp:
-            level: INFO
+            level: {{ mautrix_telegram_logging_aiohttp_level }}
     root:
-        level: DEBUG
+        level: {{ mautrix_telegram_logging_root_level }}
         handlers: [console]
