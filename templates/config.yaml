@@ -216,12 +216,16 @@ bridge:
     # to resolve redirects in invite links.
     invite_link_resolve: false
     # Send captions in the same message as images. This will send data compatible with both MSC2530 and MSC3552.
-    # This is currently not supported in most clients.
-    caption_in_message: false
+    caption_in_message: true
     # Maximum size of image in megabytes before sending to Telegram as a document.
     image_as_file_size: 20
     # Maximum number of pixels in an image before sending to Telegram as a document. Defaults to 4096x4096 = 16777216.
     image_as_file_pixels: 16777216
+    # Maximum size of Telegram documents before linking to Telegrm instead of bridge
+    # to Matrix media.
+    document_as_link_size:
+        channel:
+        bot:
     # Enable experimental parallel file transfer, which makes uploads/downloads much faster by
     # streaming from/to Matrix and using many connections for Telegram.
     # Note that generating HQ thumbnails for videos is not possible with streamed transfers.
@@ -267,8 +271,15 @@ bridge:
         # Default to encryption, force-enable encryption in all portals the bridge creates
         # This will cause the bridge bot to be in private chats for the encryption to work properly.
         default: false
-        # Whether to use MSC2409/MSC3202 instead of /sync long polling for receiving encryption-related data.
+        # Whether to use MSC3202/MSC4203 instead of /sync long polling for receiving encryption-related data.
+        # This option is not yet compatible with standard Matrix servers like Synapse and should not be used.
+        # Changing this option requires updating the appservice registration file.
         appservice: false
+        # Whether to use MSC4190 instead of appservice login to create the bridge bot device.
+        # Requires the homeserver to support MSC4190 and the device masquerading parts of MSC3202.
+        # Only relevant when using end-to-bridge encryption, required when using encryption with next-gen auth (MSC3861).
+        # Changing this option requires updating the appservice registration file.
+        msc4190: false
         # Require encryption, drop any unencrypted messages.
         require: false
         # Enable key sharing? If enabled, key requests for rooms where users are in will be fulfilled.
@@ -340,7 +351,7 @@ bridge:
     private_chat_portal_meta: default
     # Disable generating reply fallbacks? Some extremely bad clients still rely on them,
     # but they're being phased out and will be completely removed in the future.
-    disable_reply_fallbacks: false
+    disable_reply_fallbacks: true
     # Should cross-chat replies from Telegram be bridged? Most servers and clients don't support this.
     cross_room_replies: false
     # Whether or not the bridge should send a read receipt from the bridge bot when a message has
@@ -571,6 +582,8 @@ telegram:
     # Should incoming updates be handled sequentially to make sure order is preserved on Matrix?
     sequential_updates: true
     exit_on_update_error: false
+    # Interval to force refresh the connection (full reconnect). 0 disables it.
+    force_refresh_interval_seconds: 0
 
     # Telethon connection options.
     connection:
